@@ -19,20 +19,20 @@ options = optimset('MaxFunEvals',1e6,'MaxIter',1e5);
 weights = 'off';
 
 %Test temp and density
-N = 1.512E17;
+N = 1.512E16;
 T = 800;
 
 V = fitVoigtConv(W,m,c,wave, dx, N,T,rC);
 
-dat = V./max(V)+0.1*rand(1,length(V));
+dat = V./max(V) + 0.1*rand(1,length(V));
 
+[result, fval, exitflag, output]= fminsearch (@(P) fitVoigtfittingfunc(m ,c , W, wave, dat, ...
+rC, weights,P) ,[14e16 100 centroidGuess 1] , options ); %
 
-[result fval exitflag output] = fminsearch(@(P) fitVoigt2dat(m,c,W,wave, dat,rC,weights, P),[1 500 3E17 centroidGuess 1],options);
-
-rNf = result(3);            %density
+rNf = result(1);            %density
 rTf = result(2);           %background temp
 rCf = result(4);            %centroid
-rAf = result(1);            %amplitude
+rAf = result(3);            %amplitude
 
 V_out = fitVoigtConv(W,m,c,wave,dx,rNf,rTf,rC);
 
